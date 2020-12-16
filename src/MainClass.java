@@ -3,11 +3,39 @@ import java.util.Scanner;
 
 public class MainClass {
     public MainClass gameClass;
-    final public int  x_define = 5;  //5=6it   //7=8it
-    final public int  y_define = 5;  //5=6it   //7=8it
+    final public int  x_define = 6;
+    final public int  y_define = 6;
     final public char UNFILLED = '*';
     public int score = 0;
     final Random random = new Random();
+
+    /*char[][] mass = {
+            {'7', '4', '8', '4'},
+            {'5', '9', '3', '4'},
+            {'7', '1', '8', '7'},
+            {'2', '2', '1', '2'},
+    };
+
+    char[][] duplicate = {
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+    };
+
+    char[][] mass_after_string_search = {
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+    };
+
+    char[][] mass_after_column_search = {
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
+    };*/
 
     char[][] mass = {
             {UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED},
@@ -55,7 +83,7 @@ public class MainClass {
 
     String check_repeat(String buffer) {
         for(int curr_pos = 0;(curr_pos + 2) < buffer.length();){
-            if (((buffer.charAt(curr_pos) == buffer.charAt(curr_pos + 1)) && (buffer.charAt(curr_pos) == buffer.charAt(curr_pos + 2))) && (buffer.charAt(curr_pos)  != UNFILLED && buffer.charAt(curr_pos + 1)  != UNFILLED && buffer.charAt(curr_pos + 2)  != UNFILLED)) {
+            if (((buffer.charAt(curr_pos) == buffer.charAt(curr_pos + 1)) && (buffer.charAt(curr_pos) == buffer.charAt(curr_pos + 2))) && ((buffer.charAt(curr_pos)  != UNFILLED && buffer.charAt(curr_pos + 1)  != UNFILLED && buffer.charAt(curr_pos + 2)  != UNFILLED))) {
                 buffer = del_repeat(buffer, curr_pos, buffer.charAt(curr_pos));
                 score++;
             } else {
@@ -67,7 +95,7 @@ public class MainClass {
 
     void gravitation() {
         for (int countner_of_faling = x_define - 1; countner_of_faling > 0; countner_of_faling--) {
-            for (int y = y_define; y > 0; y--) {
+            for (int y = y_define - 1; y >= 0; y--) {
                 for (int x = 0; x < x_define; x++) {
                     if (mass[y][x] == '*') {
                         boolean enable = true;
@@ -87,51 +115,55 @@ public class MainClass {
         }
     }
 
-    boolean delete_column() { //mass_after_column_search
+    boolean delete_column(char[][] receiving_array) { //mass_after_column_search
         String buffer = "";
         boolean buff = false;
 
         for (int x = 0; x < x_define; x++) {
             for (int y = 0; y < y_define; y++) {
-                buffer = buffer + mass[y][x];
+                buffer = buffer + receiving_array[y][x];
             }
             buffer = check_repeat(buffer);
             for (int y = 0; y < y_define; y++) {
                 mass_after_column_search[y][x] = buffer.charAt(y);
             }
-            if (buffer.charAt(x) == '*') {
+            for (int y = 0; y < y_define; y++)
+            if (buffer.charAt(y) == UNFILLED) {
                 buff = true;
             }
             buffer = "";
         }
+
         return buff;
     }
 
-    boolean delete_string() {
+    boolean delete_string(char[][] receiving_array) {
         boolean buff = false;
         String buffer = "";
 
         for (int y = 0; y < y_define; y++) {
             for (int x = 0; x < x_define; x++) {
-                buffer = buffer + mass[y][x];
+                buffer = buffer + receiving_array[y][x];
             }
             buffer = check_repeat(buffer);
             for (int x = 0; x < x_define; x++) {
                 mass_after_string_search[y][x] = buffer.charAt(x);
             }
-            if (buffer.charAt(y) == '*') {
+            for (int x = 0; x < x_define; x++)
+            if (buffer.charAt(x) == UNFILLED) {
                 buff = true;
             }
             buffer="";
         }
+
         return buff;
     }
 
     void comparison() {
         for (int x = 0; x < x_define; x++) {
             for (int y = 0; y < y_define; y++) {
-                if ((mass_after_column_search[y][x] != mass_after_string_search[y][x]) || ((mass_after_string_search[y][x] == '*') && (mass_after_column_search[y][x] == '*'))) {
-                    mass[y][x] = '*';
+                if ((mass_after_column_search[y][x] != mass_after_string_search[y][x]) || ((mass_after_string_search[y][x] == UNFILLED) && (mass_after_column_search[y][x] == UNFILLED))) {
+                    mass[y][x] = UNFILLED;
                 }
             }
         }
@@ -139,8 +171,8 @@ public class MainClass {
 
     boolean filling() {
         boolean edit = false;
-        for (int x = 0; x <= x_define; x++) {
-            for (int y = 0; y <= y_define; y++) {
+        for (int x = 0; x < x_define; x++) {
+            for (int y = 0; y < y_define; y++) {
                 if (mass[y][x] == UNFILLED) {
                     mass[y][x] = ((char) ((random.nextInt(9) + 1) + '0')); //ot 1 do 9
                     edit = true;
@@ -150,51 +182,52 @@ public class MainClass {
         return edit;
     }
 
-    void swap(int y1, int x1, int y2, int x2) {
+    void swap(int y1, int x1, int y2, int x2, char[][] receiving_array) {
         char buff = ' ';
-        buff = mass[y1 - 1][x1 - 1];
-        mass[y1 - 1][x1 - 1] = mass[y2 - 1][x2 - 1];
-        mass[y2 - 1][x2 - 1] = buff;
+        buff = receiving_array[y1][x1];
+        receiving_array[y1][x1] = receiving_array[y2][x2];
+        receiving_array[y2][x2] = buff;
     }
 
     boolean findcomdinations() {
         duplicate = mass;
         boolean boolbuffstring = false;
         boolean boolbuffcolumn = false;
-        /*for (int x = 0; x < x_define; x++) {
+        for (int x = 0; x < x_define; x++) {
             for (int y = 0; y < y_define; y++) {
-                duplicate[y][x] = mass[y][x];
-            }
-        }*/
-        for (int x = 1; x <= x_define; x++) {
-            for (int y = 1; y <= y_define; y++) {
-                if (y + 1 <= y_define) {
-                    swap(y, x, y + 1, x);
-                    boolbuffstring = delete_string();
-                    boolbuffcolumn = delete_column();
+                if (y + 1 < y_define) {
+                    swap(y, x, y + 1, x, duplicate);
+                    boolbuffstring = delete_string(duplicate);
+                    boolbuffcolumn = delete_column(duplicate);
                 }
-                if (boolbuffstring || boolbuffcolumn ) {
+                if ((boolbuffstring || boolbuffcolumn) || boolbuffcolumn || boolbuffstring ) {
+                    swap(y + 1, x, y, x, duplicate);
+                    System.out.println(boolbuffcolumn + " column");
+                    System.out.println(boolbuffstring + " string");
                     return true;
                 }
                 else {
-                    if (y + 1 <= y_define)
-                        swap(y + 1, x, y, x);
+                    if (y + 1 < y_define)
+                        swap(y + 1, x, y, x, duplicate);
                 }
             }
         }
-        for (int y = 1; y <= y_define; y++) {
-            for (int x = 1; x <= x_define; x++) {
-                if (x + 1 <= x_define) {
-                    swap(y, x, y, x + 1);
-                    boolbuffstring = delete_string();
-                    boolbuffcolumn = delete_column();
+        for (int y = 0; y < y_define; y++) {
+            for (int x = 0; x < x_define; x++) {
+                if (x + 1 < x_define) {
+                    swap(y, x, y, x + 1, duplicate);
+                    boolbuffstring = delete_string(duplicate);
+                    boolbuffcolumn = delete_column(duplicate);
                 }
                 if (boolbuffstring || boolbuffcolumn) {
+                    System.out.println(boolbuffcolumn + " column");
+                    System.out.println(boolbuffstring + " string");
+                    swap(y, x + 1, y, x, duplicate);
                     return true;
                 }
                 else {
-                    if (x + 1 <= x_define) {
-                        swap(y, x + 1, y, x);
+                    if (x + 1 < x_define) {
+                        swap(y, x + 1, y, x, duplicate);
                     }
                 }
             }
@@ -209,7 +242,7 @@ public class MainClass {
             int y1 = (random.nextInt(y_define) + 1); //ot 1 do y_def
             int x2 = (random.nextInt(x_define) + 1); //ot 1 do x_def
             int y2 = (random.nextInt(y_define) + 1); //ot 1 do y_def
-            swap(y1, x1, y2, x2);
+            swap(y1, x1, y2, x2, mass);
             end--;
             if (end == 0) {
                 break;
@@ -217,27 +250,11 @@ public class MainClass {
         }
     }
 
-    boolean end_of_the_game() {
-        int answer;
-        Scanner in = new Scanner(System.in);
-        System.out.println("YOU LOSE!   YOU SCORE: " + score);
-        System.out.println("DO YOU WANT TO START THE GAME?    YES - 1    NO - 0 (press any key)");
-        answer = in.nextInt();
-
-        if (answer == 1)
-        {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    void cout_mass() {
+    void cout_mass(char[][] resive_mass) {
         String buffer = "";
-        for (int y = 0; y <= y_define; y++) {
-            for (int x = 0; x <= x_define; x++) {
-                buffer = buffer + mass[y][x];
+        for (int y = 0; y < y_define; y++) {
+            for (int x = 0; x < x_define; x++) {
+                buffer = buffer + resive_mass[y][x];
             }
             System.out.println(buffer);
             buffer = "";
@@ -245,108 +262,71 @@ public class MainClass {
     }
 
     boolean gamecore() {
-        delete_string();
-        delete_column();
+        delete_string(mass);
+        delete_column(mass);
         comparison();
         gravitation();
         return filling();
     }
 
-    public void startGame(){
+    void refilling(){
+        for (int y = 0; y <= y_define; y++) {
+            for (int x = 0; x <= x_define; x++) {
+                mass[y][x] = ((char) ((random.nextInt(9) + 1) + '0'));
+            }
+        }
+    }
+
+    void make_a_good_mass(boolean resume_game){
+        int i = 0;
+        while (true) {
+            magicshake();
+            while(gamecore());
+            if((findcomdinations() && !gamecore())) break;
+            i++;
+            if(i == 100) refilling();
+        }
+    }
+
+    public boolean startGame(){
+        boolean resume_game = true;
         Scanner in = new Scanner(System.in);
-
-
         String buffer = "";
         int y1, x1, y2, x2;
-        filling();
-        // Game.cout_mass(mass);
-        boolean i = false;
-        do {
-            i = gamecore();
-        } while (i);
-        if (!findcomdinations()) {
-            int countner = 0;
-            do {
-                magicshake();
-                do {
-                    if (!gamecore())
-                    {
-                        break;
-                    }
-                } while (true);
-                countner++;
-                if (countner == 100) {
-                    if (end_of_the_game())
-                    {
-                        score = 0;
-                    }
-                    else {
-                        System.exit(0);
-                    }
-                }
-            } while (!findcomdinations());
-        }
-        cout_mass();
+        //filling();
         while (true) {
+            System.out.println(gamecore());
+            cout_mass(mass);
+            System.out.println(findcomdinations());
+            resume_game = false;
             System.out.println();
             System.out.println(score + ":Score");
             System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
             System.out.print("1 - ");
-            y1 = in.nextInt();
-            x1 = in.nextInt();
+            y1 = in.nextInt() - 1;
+            x1 = in.nextInt() - 1;
             System.out.print("2 - ");
-            y2 = in.nextInt();
-            x2 = in.nextInt();
+            y2 = in.nextInt() - 1;
+            x2 = in.nextInt() - 1;
 
             if ((y1 > 0 && y1 <= y_define && x1 > 0 && x1 <= x_define && y2 > 0 && y2 <= y_define && x2 > 0 && x2 <= x_define) && (x1 == x2 || y1 == y2)) {
                 if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
-                    swap(y1, x1, y2, x2);
-                }
-                else {
-                    if (end_of_the_game())
-                    {
-                        score = 0;
+                    System.out.println("WOW YOU RIGHT!");
+                    swap(y1, x1, y2, x2, mass);
+                    resume_game = true;
+                    cout_mass(mass);
+                    boolean nextstep = gamecore();
+                    if (!nextstep){
+                        System.out.println("NOTHING CHANGE");
+                        swap(y1, x1, y2, x2, mass);
+                        resume_game = false;
+                    } else {
+                        System.out.println("CHANGE!!");
                     }
-                    else {
-                        System.exit(0);
-                    }
                 }
+            } else {
+                System.out.println("ne proshel perviy if");
             }
-            else {
-                if (end_of_the_game())
-                {
-                    score = 0;
-                }
-                else {
-                    System.exit(0);
-                }
-            }
-            if (!gamecore()) {
-                swap(y2, x2, y1, x1);
-                score--;
-            }
-            if (findcomdinations()) {
-                int countner = 0;
-                do {
-                    magicshake();
-                    do {
-                        if (gamecore()) break;
-                    } while (true);
-                    countner++;
-                    if (countner == 100) {
-                        if (end_of_the_game())
-                        {
-                            score = 0;
-                            break;
-                        }
-                        else {
-                            System.exit(0);
-                        }
-                    }
-                } while (!findcomdinations());
-            }
-            cout_mass();
-            System.exit(0);
         }
     }
 
