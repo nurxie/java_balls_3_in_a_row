@@ -238,10 +238,10 @@ public class MainClass {
     void magicshake() {
         int end = (random.nextInt(99) + 1);
         while (true) {
-            int x1 = (random.nextInt(x_define) + 1); //ot 1 do x_def
-            int y1 = (random.nextInt(y_define) + 1); //ot 1 do y_def
-            int x2 = (random.nextInt(x_define) + 1); //ot 1 do x_def
-            int y2 = (random.nextInt(y_define) + 1); //ot 1 do y_def
+            int x1 = (random.nextInt(x_define-1) + 1); //ot 1 do x_def
+            int y1 = (random.nextInt(y_define-1) + 1); //ot 1 do y_def
+            int x2 = (random.nextInt(x_define-1) + 1); //ot 1 do x_def
+            int y2 = (random.nextInt(y_define-1) + 1); //ot 1 do y_def
             swap(y1, x1, y2, x2, mass);
             end--;
             if (end == 0) {
@@ -277,14 +277,17 @@ public class MainClass {
         }
     }
 
-    void make_a_good_mass(boolean resume_game){
+    void make_a_good_mass(){
         int i = 0;
         while (true) {
             magicshake();
             while(gamecore());
             if((findcomdinations() && !gamecore())) break;
             i++;
-            if(i == 100) refilling();
+            if(i == 100){
+                refilling();
+            i = 0;
+            }
         }
     }
 
@@ -293,11 +296,15 @@ public class MainClass {
         Scanner in = new Scanner(System.in);
         String buffer = "";
         int y1, x1, y2, x2;
-        //filling();
+        filling();
+        //make_a_good_mass();
         while (true) {
             System.out.println(gamecore());
             cout_mass(mass);
             System.out.println(findcomdinations());
+            if(!findcomdinations()){
+                make_a_good_mass();
+            }
             resume_game = false;
             System.out.println();
             System.out.println(score + ":Score");
@@ -309,7 +316,7 @@ public class MainClass {
             y2 = in.nextInt() - 1;
             x2 = in.nextInt() - 1;
 
-            if ((y1 > 0 && y1 <= y_define && x1 > 0 && x1 <= x_define && y2 > 0 && y2 <= y_define && x2 > 0 && x2 <= x_define) && (x1 == x2 || y1 == y2)) {
+            if (((( (y1 > 0 && y1 <= y_define) && (x1 > 0 && x1 <= x_define)) && ((y2 > 0 && y2 <= y_define) && (x2 > 0 && x2 <= x_define))) || (x1 == x2 || y1 == y2)) && ((Math.abs(x1 - x2) + Math.abs(y1 - y2)) == 1)) {
                 if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
                     System.out.println("WOW YOU RIGHT!");
                     swap(y1, x1, y2, x2, mass);
