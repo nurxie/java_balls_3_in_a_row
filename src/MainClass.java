@@ -2,7 +2,6 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class MainClass {
-    public MainClass gameClass;
     final public int  x_define = 6;
     final public int  y_define = 6;
     final public char UNFILLED = '*';
@@ -115,7 +114,7 @@ public class MainClass {
         }
     }
 
-    boolean delete_column(char[][] receiving_array) { //mass_after_column_search
+    boolean delete_column(char[][] receiving_array) {
         String buffer = "";
         boolean buff = false;
 
@@ -202,8 +201,6 @@ public class MainClass {
                 }
                 if ((boolbuffstring || boolbuffcolumn) || boolbuffcolumn || boolbuffstring ) {
                     swap(y + 1, x, y, x, duplicate);
-                    System.out.println(boolbuffcolumn + " column");
-                    System.out.println(boolbuffstring + " string");
                     return true;
                 }
                 else {
@@ -220,8 +217,6 @@ public class MainClass {
                     boolbuffcolumn = delete_column(duplicate);
                 }
                 if (boolbuffstring || boolbuffcolumn) {
-                    System.out.println(boolbuffcolumn + " column");
-                    System.out.println(boolbuffstring + " string");
                     swap(y, x + 1, y, x, duplicate);
                     return true;
                 }
@@ -237,6 +232,7 @@ public class MainClass {
 
     void magicshake() {
         int end = (random.nextInt(99) + 1);
+        System.out.println("Sorry. Its magicshake!========================");
         while (true) {
             int x1 = (random.nextInt(x_define-1) + 1); //ot 1 do x_def
             int y1 = (random.nextInt(y_define-1) + 1); //ot 1 do y_def
@@ -270,6 +266,7 @@ public class MainClass {
     }
 
     void refilling(){
+        System.out.println("Sorry. Its refilling!========================");
         for (int y = 0; y <= y_define; y++) {
             for (int x = 0; x <= x_define; x++) {
                 mass[y][x] = ((char) ((random.nextInt(9) + 1) + '0'));
@@ -292,20 +289,18 @@ public class MainClass {
     }
 
     public boolean startGame(){
-        boolean resume_game = true;
+        //boolean resume_game = true;
         Scanner in = new Scanner(System.in);
         String buffer = "";
         int y1, x1, y2, x2;
         filling();
-        //make_a_good_mass();
+        make_a_good_mass();
         while (true) {
             System.out.println(gamecore());
             cout_mass(mass);
             System.out.println(findcomdinations());
-            if(!findcomdinations()){
-                make_a_good_mass();
-            }
-            resume_game = false;
+            if(!findcomdinations()) make_a_good_mass();
+            //resume_game = false;
             System.out.println();
             System.out.println(score + ":Score");
             System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
@@ -320,13 +315,13 @@ public class MainClass {
                 if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
                     System.out.println("WOW YOU RIGHT!");
                     swap(y1, x1, y2, x2, mass);
-                    resume_game = true;
+                   // resume_game = true;
                     cout_mass(mass);
                     boolean nextstep = gamecore();
                     if (!nextstep){
                         System.out.println("NOTHING CHANGE");
                         swap(y1, x1, y2, x2, mass);
-                        resume_game = false;
+                       // resume_game = false;
                     } else {
                         System.out.println("CHANGE!!");
                     }
