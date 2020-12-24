@@ -1,40 +1,14 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 import java.util.Scanner;
 
-public class MainClass {
+public class MainClass extends JFrame {
     final public int  x_define = 6;
     final public int  y_define = 6;
     final public char UNFILLED = '*';
     public int score = 0;
     final Random random = new Random();
-
-    /*char[][] mass = {
-            {'7', '4', '8', '4'},
-            {'5', '9', '3', '4'},
-            {'7', '1', '8', '7'},
-            {'2', '2', '1', '2'},
-    };
-
-    char[][] duplicate = {
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-    };
-
-    char[][] mass_after_string_search = {
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-    };
-
-    char[][] mass_after_column_search = {
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-            {UNFILLED, UNFILLED, UNFILLED, UNFILLED},
-    };*/
 
     char[][] mass = {
             {UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED},
@@ -70,7 +44,7 @@ public class MainClass {
     };
 
     String del_repeat(String buffer, int curr_pos, char templ) {
-        StringBuffer sb = new StringBuffer(buffer);
+        StringBuilder sb = new StringBuilder(buffer);
         while ((curr_pos < buffer.length()) && (buffer.charAt(curr_pos) == templ)) {
             //sb.replace(curr_pos, curr_pos, Character.toString(UNFILLED));
             sb.setCharAt(curr_pos, UNFILLED);
@@ -127,9 +101,10 @@ public class MainClass {
                 mass_after_column_search[y][x] = buffer.charAt(y);
             }
             for (int y = 0; y < y_define; y++)
-            if (buffer.charAt(y) == UNFILLED) {
-                buff = true;
-            }
+                if (buffer.charAt(y) == UNFILLED) {
+                    buff = true;
+                    break;
+                }
             buffer = "";
         }
 
@@ -149,9 +124,10 @@ public class MainClass {
                 mass_after_string_search[y][x] = buffer.charAt(x);
             }
             for (int x = 0; x < x_define; x++)
-            if (buffer.charAt(x) == UNFILLED) {
-                buff = true;
-            }
+                if (buffer.charAt(x) == UNFILLED) {
+                    buff = true;
+                    break;
+                }
             buffer="";
         }
 
@@ -182,7 +158,7 @@ public class MainClass {
     }
 
     void swap(int y1, int x1, int y2, int x2, char[][] receiving_array) {
-        char buff = ' ';
+        char buff;
         buff = receiving_array[y1][x1];
         receiving_array[y1][x1] = receiving_array[y2][x2];
         receiving_array[y2][x2] = buff;
@@ -199,7 +175,7 @@ public class MainClass {
                     boolbuffstring = delete_string(duplicate);
                     boolbuffcolumn = delete_column(duplicate);
                 }
-                if ((boolbuffstring || boolbuffcolumn) || boolbuffcolumn || boolbuffstring ) {
+                if (boolbuffcolumn || boolbuffstring) {
                     swap(y + 1, x, y, x, duplicate);
                     return true;
                 }
@@ -233,28 +209,28 @@ public class MainClass {
     void magicshake() {
         int end = (random.nextInt(99) + 1);
         System.out.println("Sorry. Its magicshake!========================");
-        while (true) {
-            int x1 = (random.nextInt(x_define-1) + 1); //ot 1 do x_def
-            int y1 = (random.nextInt(y_define-1) + 1); //ot 1 do y_def
-            int x2 = (random.nextInt(x_define-1) + 1); //ot 1 do x_def
-            int y2 = (random.nextInt(y_define-1) + 1); //ot 1 do y_def
+        do {
+            int x1 = (random.nextInt(x_define - 1) + 1); //ot 1 do x_def
+            int y1 = (random.nextInt(y_define - 1) + 1); //ot 1 do y_def
+            int x2 = (random.nextInt(x_define - 1) + 1); //ot 1 do x_def
+            int y2 = (random.nextInt(y_define - 1) + 1); //ot 1 do y_def
             swap(y1, x1, y2, x2, mass);
             end--;
-            if (end == 0) {
-                break;
-            }
-        }
+        } while (end != 0);
     }
 
     void cout_mass(char[][] resive_mass) {
-        String buffer = "";
+        StringBuilder buffer = new StringBuilder();
         for (int y = 0; y < y_define; y++) {
             for (int x = 0; x < x_define; x++) {
-                buffer = buffer + resive_mass[y][x];
+                gameBalls[y][x].setColor(Integer.parseInt(String.valueOf(resive_mass[y][x])));
+                buffer.append(resive_mass[y][x]);
             }
             System.out.println(buffer);
-            buffer = "";
+            buffer = new StringBuilder();
         }
+
+        repaint();
     }
 
     boolean gamecore() {
@@ -279,28 +255,54 @@ public class MainClass {
         while (true) {
             magicshake();
             while(gamecore());
-            if((findcomdinations() && !gamecore())) break;
+            if((findcomdinations() && !gamecore())){
+                break;
+            }
             i++;
             if(i == 100){
                 refilling();
-            i = 0;
+                i = 0;
+            }
+        }
+    }
+
+    GameBall[][] gameBalls = new GameBall[6][6];
+    private void initBalls(){
+        for (int i = 0; i < x_define; i++){
+            for (int j = 0; j < y_define; j++){
+                gameBalls[i][j] = new GameBall();
+                gameBalls[i][j].setxCenter(100 + i*2*50);
+                gameBalls[i][j].setyCenter(100 + j*2*50);
+                gameBalls[i][j].setRadius(50);
+            }
+        }
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        for (int i = 0; i < x_define; i++){
+            for (int j = 0; j < y_define; j++){
+                gameBalls[i][j].draw(g);
             }
         }
     }
 
     public boolean startGame(){
+
         //boolean resume_game = true;
         Scanner in = new Scanner(System.in);
         String buffer = "";
         int y1, x1, y2, x2;
         filling();
         make_a_good_mass();
+        initBalls();
         while (true) {
             System.out.println(gamecore());
-            cout_mass(mass);
             System.out.println(findcomdinations());
             if(!findcomdinations()) make_a_good_mass();
             //resume_game = false;
+            cout_mass(mass);
             System.out.println();
             System.out.println(score + ":Score");
             System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
@@ -315,13 +317,13 @@ public class MainClass {
                 if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
                     System.out.println("WOW YOU RIGHT!");
                     swap(y1, x1, y2, x2, mass);
-                   // resume_game = true;
+                    // resume_game = true;
                     cout_mass(mass);
                     boolean nextstep = gamecore();
                     if (!nextstep){
                         System.out.println("NOTHING CHANGE");
                         swap(y1, x1, y2, x2, mass);
-                       // resume_game = false;
+                        // resume_game = false;
                     } else {
                         System.out.println("CHANGE!!");
                     }
@@ -334,6 +336,14 @@ public class MainClass {
 
     public static void main(String[] args) {
         MainClass game = new MainClass();
+        game.createFrame();
         game.startGame();
+    }
+
+    private void createFrame() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(700, 700);
+        setResizable(false);
+        setVisible(true);
     }
 }
