@@ -3,6 +3,8 @@ import java.awt.*;
 import java.util.Random;
 import java.util.Scanner;
 
+import java.awt.event.*;
+
 public class MainClass extends JFrame {
     final public int  x_define = 6;
     final public int  y_define = 6;
@@ -10,7 +12,7 @@ public class MainClass extends JFrame {
     public int score = 0;
     final Random random = new Random();
 
-    char[][] mass = {
+        char[][] mass = {
             {UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED},
             {UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED},
             {UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED},
@@ -268,12 +270,12 @@ public class MainClass extends JFrame {
 
     GameBall[][] gameBalls = new GameBall[6][6];
     private void initBalls(){
-        for (int i = 0; i < x_define; i++){
-            for (int j = 0; j < y_define; j++){
-                gameBalls[i][j] = new GameBall();
-                gameBalls[i][j].setxCenter(100 + i*2*50);
-                gameBalls[i][j].setyCenter(100 + j*2*50);
-                gameBalls[i][j].setRadius(50);
+        for (int y = 0; y < y_define; y++){
+            for (int x = 0; x < x_define; x++){
+                gameBalls[y][x] = new GameBall();
+                gameBalls[y][x].setxCenter(100 + y*2*50);
+                gameBalls[y][x].setyCenter(100 + x*2*50);
+                gameBalls[y][x].setRadius(50);
             }
         }
     }
@@ -289,15 +291,24 @@ public class MainClass extends JFrame {
     }
 
     public boolean startGame(){
-
+    boolean choiсe = false;
         //boolean resume_game = true;
         Scanner in = new Scanner(System.in);
         String buffer = "";
-        int y1, x1, y2, x2;
+        int y1 = 1, x1 = 1, y2 = 1, x2 = 1;
         filling();
         make_a_good_mass();
         initBalls();
         while (true) {
+
+/*while (true) {
+    Point location = MouseInfo.getPointerInfo().getLocation();
+    int x = (int)location.getX();
+    int y = (int)location.getY();
+
+    System.out.println("x = " + x);
+    System.out.println("y = " + y);
+}*/
             System.out.println(gamecore());
             System.out.println(findcomdinations());
             if(!findcomdinations()) make_a_good_mass();
@@ -306,12 +317,15 @@ public class MainClass extends JFrame {
             System.out.println();
             System.out.println(score + ":Score");
             System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
-            System.out.print("1 - ");
+           /* System.out.print("1 - ");
             y1 = in.nextInt() - 1;
             x1 = in.nextInt() - 1;
             System.out.print("2 - ");
             y2 = in.nextInt() - 1;
-            x2 = in.nextInt() - 1;
+            x2 = in.nextInt() - 1;*/
+            while(!choiсe){
+
+            }
 
             if (((( (y1 > 0 && y1 <= y_define) && (x1 > 0 && x1 <= x_define)) && ((y2 > 0 && y2 <= y_define) && (x2 > 0 && x2 <= x_define))) || (x1 == x2 || y1 == y2)) && ((Math.abs(x1 - x2) + Math.abs(y1 - y2)) == 1)) {
                 if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
@@ -334,7 +348,10 @@ public class MainClass extends JFrame {
         }
     }
 
+
+
     public static void main(String[] args) {
+        new MouseListenerExample();
         MainClass game = new MainClass();
         game.createFrame();
         game.startGame();

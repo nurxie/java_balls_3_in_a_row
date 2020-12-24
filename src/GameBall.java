@@ -12,7 +12,7 @@ public class GameBall {
         g.fillOval(xCenter - radius, yCenter - radius, 2 * radius, 2 * radius);
         if (isSelected){
             g.setColor(Color.white);
-            g.drawOval(xCenter - 3 , yCenter - 3, 6, 6);
+            g.fillOval(xCenter - 10 , yCenter - 10, 20, 20);
         }
     }
 
