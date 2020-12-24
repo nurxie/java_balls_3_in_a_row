@@ -13,7 +13,8 @@ public class MainClass extends JFrame implements MouseListener {
 
     int MouseX = 0;
     int MouseY = 0;
-    boolean click = false;
+    boolean ready = false;
+    int countner = 0; //for count click on balls, nulling after 2
 
     int y1 = 1, x1 = 1, y2 = 1, x2 = 1;
 
@@ -305,15 +306,6 @@ public class MainClass extends JFrame implements MouseListener {
         make_a_good_mass();
         initBalls();
         while (true) {
-
-/*while (true) {
-    Point location = MouseInfo.getPointerInfo().getLocation();
-    int x = (int)location.getX();
-    int y = (int)location.getY();
-
-    System.out.println("x = " + x);
-    System.out.println("y = " + y);
-}*/
             System.out.println(gamecore());
             System.out.println(findcomdinations());
             if(!findcomdinations()) make_a_good_mass();
@@ -321,17 +313,9 @@ public class MainClass extends JFrame implements MouseListener {
             System.out.println();
             System.out.println(score + ":Score");
             System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
-           /* System.out.print("1 - ");
-            y1 = in.nextInt() - 1;
-            x1 = in.nextInt() - 1;
-            System.out.print("2 - ");
-            y2 = in.nextInt() - 1;
-            x2 = in.nextInt() - 1;*/
-            /*for (int y = 0; y < y_define; y++)
-                        for (int x = 0; x < x_define; x++)
-                    gameBalls[y][x].setSelected(false);*/
-           while(click == false);
-           click = false;
+           //y1 x1 y2 x2 transmit
+            while(!ready);
+           // ready = false;
             if (((( (y1 > 0 && y1 <= y_define) && (x1 > 0 && x1 <= x_define)) && ((y2 > 0 && y2 <= y_define) && (x2 > 0 && x2 <= x_define))) || (x1 == x2 || y1 == y2)) && ((Math.abs(x1 - x2) + Math.abs(y1 - y2)) == 1)) {
                 if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
                     System.out.println("WOW YOU RIGHT!");
@@ -350,7 +334,7 @@ public class MainClass extends JFrame implements MouseListener {
             }
         }
     }
-int countner = 0;
+
     @Override
     public void mouseClicked(MouseEvent e) {
         countner++;
@@ -383,8 +367,11 @@ int countner = 0;
                     }
                 }
             }
-            click = true;
+            ready = true;
             countner = 0;
+            for (int y = 0; y < y_define; y++)
+                for (int x = 0; x < x_define; x++)
+                    gameBalls[y][x].setSelected(false);
             System.out.println(x1 + " " + y1);
             System.out.println(x2 + " " + y2);
         }
