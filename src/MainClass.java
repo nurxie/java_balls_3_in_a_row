@@ -5,12 +5,21 @@ import java.util.Scanner;
 
 import java.awt.event.*;
 
-public class MainClass extends JFrame {
+public class MainClass extends JFrame implements MouseListener {
     final public int  x_define = 6;
     final public int  y_define = 6;
     final public char UNFILLED = '*';
     public int score = 0;
+
+    int MouseX = 0;
+    int MouseY = 0;
+    boolean click = false;
+
+    int y1 = 1, x1 = 1, y2 = 1, x2 = 1;
+
     final Random random = new Random();
+
+    GameBall[][] gameBalls = new GameBall[6][6];
 
         char[][] mass = {
             {UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED},
@@ -268,7 +277,6 @@ public class MainClass extends JFrame {
         }
     }
 
-    GameBall[][] gameBalls = new GameBall[6][6];
     private void initBalls(){
         for (int y = 0; y < y_define; y++){
             for (int x = 0; x < x_define; x++){
@@ -291,11 +299,8 @@ public class MainClass extends JFrame {
     }
 
     public boolean startGame(){
-    boolean choiсe = false;
-        //boolean resume_game = true;
         Scanner in = new Scanner(System.in);
         String buffer = "";
-        int y1 = 1, x1 = 1, y2 = 1, x2 = 1;
         filling();
         make_a_good_mass();
         initBalls();
@@ -312,7 +317,6 @@ public class MainClass extends JFrame {
             System.out.println(gamecore());
             System.out.println(findcomdinations());
             if(!findcomdinations()) make_a_good_mass();
-            //resume_game = false;
             cout_mass(mass);
             System.out.println();
             System.out.println(score + ":Score");
@@ -323,21 +327,20 @@ public class MainClass extends JFrame {
             System.out.print("2 - ");
             y2 = in.nextInt() - 1;
             x2 = in.nextInt() - 1;*/
-            while(!choiсe){
-
-            }
-
+            /*for (int y = 0; y < y_define; y++)
+                        for (int x = 0; x < x_define; x++)
+                    gameBalls[y][x].setSelected(false);*/
+           while(click == false);
+           click = false;
             if (((( (y1 > 0 && y1 <= y_define) && (x1 > 0 && x1 <= x_define)) && ((y2 > 0 && y2 <= y_define) && (x2 > 0 && x2 <= x_define))) || (x1 == x2 || y1 == y2)) && ((Math.abs(x1 - x2) + Math.abs(y1 - y2)) == 1)) {
                 if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
                     System.out.println("WOW YOU RIGHT!");
                     swap(y1, x1, y2, x2, mass);
-                    // resume_game = true;
                     cout_mass(mass);
                     boolean nextstep = gamecore();
                     if (!nextstep){
                         System.out.println("NOTHING CHANGE");
                         swap(y1, x1, y2, x2, mass);
-                        // resume_game = false;
                     } else {
                         System.out.println("CHANGE!!");
                     }
@@ -347,17 +350,59 @@ public class MainClass extends JFrame {
             }
         }
     }
+int countner = 0;
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        countner++;
+        if (countner == 1) {
+            MouseX = e.getX();
+            MouseY = e.getY();
+            for (int y = 0; y < y_define; y++) {
+                for (int x = 0; x < x_define; x++) {
+                    if (gameBalls[y][x].isMouseUnderMe(MouseY, MouseX)) {
+                        x1 = x+1;
+                        y1 = y+1;
+                        gameBalls[y][x].setSelected(true);
+                        repaint();
+                        break;
+                    }
+                }
+            }
+        }
+        if(countner == 2){
+            MouseX = e.getX();
+            MouseY = e.getY();
+            for (int y = 0; y < y_define; y++) {
+                for (int x = 0; x < x_define; x++) {
+                    if (gameBalls[y][x].isMouseUnderMe(MouseY, MouseX)) {
+                        x2 = x+1;
+                        y2 = y+1;
+                        gameBalls[y][x].setSelected(true);
+                        repaint();
+                        break;
+                    }
+                }
+            }
+            click = true;
+            countner = 0;
+            System.out.println(x1 + " " + y1);
+            System.out.println(x2 + " " + y2);
+        }
+    }
 
-
+    public void mouseEntered(MouseEvent e) { }
+    public void mouseExited(MouseEvent e) { }
+    public void mousePressed(MouseEvent e) { }
+    public void mouseReleased(MouseEvent e) { }
 
     public static void main(String[] args) {
-        new MouseListenerExample();
         MainClass game = new MainClass();
         game.createFrame();
         game.startGame();
     }
 
-    private void createFrame() {
+    public void createFrame() {
+        addMouseListener(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(700, 700);
         setResizable(false);

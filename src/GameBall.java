@@ -16,7 +16,7 @@ public class GameBall {
         }
     }
 
-    public boolean isMouseUnderMe(int xMouse, int yMouse){
+    public boolean isMouseUnderMe(int yMouse, int xMouse){
         return (xMouse-xCenter)*(xMouse-xCenter)+(yMouse-yCenter)*(yMouse-yCenter) <= radius*radius;
     }
 
@@ -62,5 +62,9 @@ public class GameBall {
 
     public void setRadius(int radius) {
         this.radius = radius;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }
