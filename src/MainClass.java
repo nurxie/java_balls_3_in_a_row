@@ -410,6 +410,7 @@ public class MainClass extends JFrame implements MouseListener {
     public void createFrame() {
         addMouseListener(this);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Cyberpunk2077 minimal settings");
         setSize(700, 700);
         setResizable(false);
         setVisible(true);
