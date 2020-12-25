@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.applet.*;
 
 public class GameBall {
     private Color color;

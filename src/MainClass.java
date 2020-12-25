@@ -20,6 +20,7 @@ public class MainClass extends JFrame implements MouseListener {
 
     GameBall[][] gameBalls = new GameBall[6][6];
     ScoreMonitor scoreMonitor = new ScoreMonitor();
+    MagicshakeMonitor magicshakeMonitor = new MagicshakeMonitor();
 
         char[][] mass = {
             {UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED},
@@ -69,7 +70,7 @@ public class MainClass extends JFrame implements MouseListener {
         for(int curr_pos = 0;(curr_pos + 2) < buffer.length();){
             if (((buffer.charAt(curr_pos) == buffer.charAt(curr_pos + 1)) && (buffer.charAt(curr_pos) == buffer.charAt(curr_pos + 2))) && ((buffer.charAt(curr_pos)  != UNFILLED && buffer.charAt(curr_pos + 1)  != UNFILLED && buffer.charAt(curr_pos + 2)  != UNFILLED))) {
                 buffer = del_repeat(buffer, curr_pos, buffer.charAt(curr_pos));
-                score++;
+                //score++;
             } else {
                 curr_pos++;
             }
@@ -220,6 +221,7 @@ public class MainClass extends JFrame implements MouseListener {
     void magicshake() {
         int end = (random.nextInt(99) + 1);
         System.out.println("Sorry. Its magicshake!========================");
+        magicshakeMonitor.setVisible(true);
         do {
             int x1 = (random.nextInt(x_define - 1) + 1); //ot 1 do x_def
             int y1 = (random.nextInt(y_define - 1) + 1); //ot 1 do y_def
@@ -299,6 +301,7 @@ public class MainClass extends JFrame implements MouseListener {
         }
         scoreMonitor.setScore(score);
         scoreMonitor.draw(g);
+        magicshakeMonitor.draw(g);
     }
 
     public boolean choiceswap(int y1, int x1, int y2, int x2){
@@ -312,6 +315,7 @@ public class MainClass extends JFrame implements MouseListener {
                     return false;
                 } else {
                     System.out.println("CHANGE!!");
+                    score++;
                     return true;
                 }
             }
@@ -334,6 +338,7 @@ public class MainClass extends JFrame implements MouseListener {
             System.out.println();
             System.out.println(score + ":Score");
             System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
+        magicshakeMonitor.setVisible(false);
     }
 
     @Override
@@ -353,6 +358,7 @@ public class MainClass extends JFrame implements MouseListener {
                     }
                 }
             }
+            magicshakeMonitor.setVisible(false);
         }
         if(countner == 2){
             MouseX = e.getX();
@@ -379,6 +385,7 @@ public class MainClass extends JFrame implements MouseListener {
             Scanner in = new Scanner(System.in);
             String buffer = "";
             initBalls();
+            while(gamecore());
             System.out.println(gamecore());
             System.out.println(findcomdinations());
             if(!findcomdinations()) make_a_good_mass();
