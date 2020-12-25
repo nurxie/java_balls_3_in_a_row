@@ -58,7 +58,6 @@ public class MainClass extends JFrame implements MouseListener {
     String del_repeat(String buffer, int curr_pos, char templ) {
         StringBuilder sb = new StringBuilder(buffer);
         while ((curr_pos < buffer.length()) && (buffer.charAt(curr_pos) == templ)) {
-            //sb.replace(curr_pos, curr_pos, Character.toString(UNFILLED));
             sb.setCharAt(curr_pos, UNFILLED);
             curr_pos++;
         }
@@ -70,7 +69,6 @@ public class MainClass extends JFrame implements MouseListener {
         for(int curr_pos = 0;(curr_pos + 2) < buffer.length();){
             if (((buffer.charAt(curr_pos) == buffer.charAt(curr_pos + 1)) && (buffer.charAt(curr_pos) == buffer.charAt(curr_pos + 2))) && ((buffer.charAt(curr_pos)  != UNFILLED && buffer.charAt(curr_pos + 1)  != UNFILLED && buffer.charAt(curr_pos + 2)  != UNFILLED))) {
                 buffer = del_repeat(buffer, curr_pos, buffer.charAt(curr_pos));
-                //score++;
             } else {
                 curr_pos++;
             }
@@ -220,7 +218,6 @@ public class MainClass extends JFrame implements MouseListener {
 
     void magicshake() {
         int end = (random.nextInt(99) + 1);
-        //System.out.println("Sorry. Its magicshake!========================");
         magicshakeMonitor.setVisible(true);
         do {
             int x1 = (random.nextInt(x_define - 1) + 1); //ot 1 do x_def
@@ -233,7 +230,6 @@ public class MainClass extends JFrame implements MouseListener {
     }
 
     void cout_mass(char[][] resive_mass) {
-        //StringBuilder buffer = new StringBuilder();
         for (int y = 0; y < y_define; y++) {
             for (int x = 0; x < x_define; x++) {
                 gameBalls[y][x].setColor(Integer.parseInt(String.valueOf(resive_mass[y][x])));
@@ -255,7 +251,6 @@ public class MainClass extends JFrame implements MouseListener {
     }
 
     void refilling(){
-        //System.out.println("Sorry. Its refilling!========================");
         for (int y = 0; y <= y_define; y++) {
             for (int x = 0; x <= x_define; x++) {
                 mass[y][x] = ((char) ((random.nextInt(9) + 1) + '0'));
@@ -306,35 +301,24 @@ public class MainClass extends JFrame implements MouseListener {
     public void choiceswap(int y1, int x1, int y2, int x2){
         if (((( (y1 > 0 && y1 <= y_define) && (x1 > 0 && x1 <= x_define)) && ((y2 > 0 && y2 <= y_define) && (x2 > 0 && x2 <= x_define))) || (x1 == x2 || y1 == y2)) && ((Math.abs(x1 - x2) + Math.abs(y1 - y2)) == 1)) {
             if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
-                //System.out.println("WOW YOU RIGHT!");
                 swap(y1-1, x1-1, y2-1, x2-1, mass);
                 if (!gamecore()){
-                    //System.out.println("NOTHING CHANGE");
                     swap(y1-1, x1-1, y2-1, x2-1, mass);
                 } else {
-                    //System.out.println("CHANGE!!");
                     score++;
                 }
             }
-        } else {
-            //System.out.println("ne proshel perviy if");
         }
     }
 
     public void startGame(){
-        Scanner in = new Scanner(System.in);
         filling();
         make_a_good_mass();
         initBalls();
-            //System.out.println(gamecore());
         gamecore();
-            //System.out.println(findcomdinations());
         findcomdinations();
             if(!findcomdinations()) make_a_good_mass();
             cout_mass(mass);
-            //System.out.println();
-            //System.out.println(score + ":Score");
-            //System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
         magicshakeMonitor.setVisible(false);
     }
 
@@ -347,8 +331,8 @@ public class MainClass extends JFrame implements MouseListener {
             for (int y = 0; y < y_define; y++) {
                 for (int x = 0; x < x_define; x++) {
                     if (gameBalls[y][x].isMouseUnderMe(MouseY, MouseX)) {
-                        x1 = x+1;
-                        y1 = y+1;
+                        x1 = x + 1;
+                        y1 = y + 1;
                         gameBalls[y][x].setSelected(true);
                         repaint();
                         break;
@@ -357,14 +341,14 @@ public class MainClass extends JFrame implements MouseListener {
             }
             magicshakeMonitor.setVisible(false);
         }
-        if(countner == 2){
+        if (countner == 2) {
             MouseX = e.getX();
             MouseY = e.getY();
             for (int y = 0; y < y_define; y++) {
                 for (int x = 0; x < x_define; x++) {
                     if (gameBalls[y][x].isMouseUnderMe(MouseY, MouseX)) {
-                        x2 = x+1;
-                        y2 = y+1;
+                        x2 = x + 1;
+                        y2 = y + 1;
                         gameBalls[y][x].setSelected(true);
                         repaint();
                         break;
@@ -375,23 +359,14 @@ public class MainClass extends JFrame implements MouseListener {
             for (int y = 0; y < y_define; y++)
                 for (int x = 0; x < x_define; x++)
                     gameBalls[y][x].setSelected(false); //delete selected mode from balls
-            //System.out.println(x1 + " " + y1);
-            //System.out.println(x2 + " " + y2);
             choiceswap(y1, x1, y2, x2);
             cout_mass(mass);
-            Scanner in = new Scanner(System.in);
-            String buffer = "";
             initBalls();
-            while(gamecore());
-            //System.out.println(gamecore());
+            while (gamecore()) ;
             gamecore();
-            //System.out.println(findcomdinations());
             findcomdinations();
-            if(!findcomdinations()) make_a_good_mass();
+            if (!findcomdinations()) make_a_good_mass();
             cout_mass(mass);
-            //System.out.println();
-            //System.out.println(score + ":Score");
-            //System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
         }
     }
 
