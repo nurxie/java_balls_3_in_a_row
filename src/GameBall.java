@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.applet.*;
 
 public class GameBall {
     private Color color;
@@ -8,16 +9,14 @@ public class GameBall {
     boolean isSelected = false;
 
     public void draw(Graphics g){
+        g.setColor(Color.black);
+        g.drawString("Score: " + " ", 20,50);
         g.setColor(color);
         g.fillOval(xCenter - radius, yCenter - radius, 2 * radius, 2 * radius);
         if (isSelected){
             g.setColor(Color.white);
             g.fillOval(xCenter - 10 , yCenter - 10, 20, 20);
         }
-    }
-
-    public void scoreMonitor(Graphics g, int score){
-        g.drawString("Hello to JavaTutorial.net", 2, 2);
     }
 
     public boolean isMouseUnderMe(int yMouse, int xMouse){

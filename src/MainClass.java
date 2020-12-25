@@ -19,6 +19,7 @@ public class MainClass extends JFrame implements MouseListener {
     final Random random = new Random();
 
     GameBall[][] gameBalls = new GameBall[6][6];
+    ScoreMonitor scoreMonitor = new ScoreMonitor();
 
         char[][] mass = {
             {UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED, UNFILLED},
@@ -291,12 +292,13 @@ public class MainClass extends JFrame implements MouseListener {
     public void paint(Graphics g) {
         g.drawString("Hello to JavaTutorial.net", 20, 20);
         super.paint(g);
-        for (int i = 0; i < x_define; i++){
-            for (int j = 0; j < y_define; j++){
+        for (int i = 0; i < x_define; i++) {
+            for (int j = 0; j < y_define; j++) {
                 gameBalls[i][j].draw(g);
             }
         }
-        gameBalls[1][1].scoreMonitor(g, score);
+        scoreMonitor.setScore(score);
+        scoreMonitor.draw(g);
     }
 
     public boolean choiceswap(int y1, int x1, int y2, int x2){
