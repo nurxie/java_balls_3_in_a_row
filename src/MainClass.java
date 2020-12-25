@@ -2,7 +2,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Random;
 import java.util.Scanner;
-
 import java.awt.event.*;
 
 public class MainClass extends JFrame implements MouseListener {
@@ -13,10 +12,9 @@ public class MainClass extends JFrame implements MouseListener {
 
     int MouseX = 0;
     int MouseY = 0;
-    boolean ready = false;
     int countner = 0; //for count click on balls, nulling after 2
 
-    int y1 = 1, x1 = 1, y2 = 1, x2 = 1;
+    int y1 = 0, x1 = 0, y2 = 0, x2 = 0;
 
     final Random random = new Random();
 
@@ -291,21 +289,42 @@ public class MainClass extends JFrame implements MouseListener {
 
     @Override
     public void paint(Graphics g) {
+        g.drawString("Hello to JavaTutorial.net", 20, 20);
         super.paint(g);
         for (int i = 0; i < x_define; i++){
             for (int j = 0; j < y_define; j++){
                 gameBalls[i][j].draw(g);
             }
         }
+        gameBalls[1][1].scoreMonitor(g, score);
     }
 
-    public boolean startGame(){
+    public boolean choiceswap(int y1, int x1, int y2, int x2){
+        if (((( (y1 > 0 && y1 <= y_define) && (x1 > 0 && x1 <= x_define)) && ((y2 > 0 && y2 <= y_define) && (x2 > 0 && x2 <= x_define))) || (x1 == x2 || y1 == y2)) && ((Math.abs(x1 - x2) + Math.abs(y1 - y2)) == 1)) {
+            if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
+                System.out.println("WOW YOU RIGHT!");
+                swap(y1-1, x1-1, y2-1, x2-1, mass);
+                if (!gamecore()){
+                    System.out.println("NOTHING CHANGE");
+                    swap(y1-1, x1-1, y2-1, x2-1, mass);
+                    return false;
+                } else {
+                    System.out.println("CHANGE!!");
+                    return true;
+                }
+            }
+        } else {
+            System.out.println("ne proshel perviy if");
+        }
+        return true;
+    }
+
+    public void startGame(){
         Scanner in = new Scanner(System.in);
         String buffer = "";
         filling();
         make_a_good_mass();
         initBalls();
-        while (true) {
             System.out.println(gamecore());
             System.out.println(findcomdinations());
             if(!findcomdinations()) make_a_good_mass();
@@ -313,26 +332,6 @@ public class MainClass extends JFrame implements MouseListener {
             System.out.println();
             System.out.println(score + ":Score");
             System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
-           //y1 x1 y2 x2 transmit
-            while(!ready);
-           // ready = false;
-            if (((( (y1 > 0 && y1 <= y_define) && (x1 > 0 && x1 <= x_define)) && ((y2 > 0 && y2 <= y_define) && (x2 > 0 && x2 <= x_define))) || (x1 == x2 || y1 == y2)) && ((Math.abs(x1 - x2) + Math.abs(y1 - y2)) == 1)) {
-                if (Math.abs(y1 - y2) <= 1 && Math.abs(x1 - x2) <= 1) {
-                    System.out.println("WOW YOU RIGHT!");
-                    swap(y1, x1, y2, x2, mass);
-                    cout_mass(mass);
-                    boolean nextstep = gamecore();
-                    if (!nextstep){
-                        System.out.println("NOTHING CHANGE");
-                        swap(y1, x1, y2, x2, mass);
-                    } else {
-                        System.out.println("CHANGE!!");
-                    }
-                }
-            } else {
-                System.out.println("ne proshel perviy if");
-            }
-        }
     }
 
     @Override
@@ -367,13 +366,24 @@ public class MainClass extends JFrame implements MouseListener {
                     }
                 }
             }
-            ready = true;
             countner = 0;
             for (int y = 0; y < y_define; y++)
                 for (int x = 0; x < x_define; x++)
-                    gameBalls[y][x].setSelected(false);
+                    gameBalls[y][x].setSelected(false); //delete selected mode from balls
             System.out.println(x1 + " " + y1);
             System.out.println(x2 + " " + y2);
+            choiceswap(y1, x1, y2, x2);
+            cout_mass(mass);
+            Scanner in = new Scanner(System.in);
+            String buffer = "";
+            initBalls();
+            System.out.println(gamecore());
+            System.out.println(findcomdinations());
+            if(!findcomdinations()) make_a_good_mass();
+            cout_mass(mass);
+            System.out.println();
+            System.out.println(score + ":Score");
+            System.out.println("it was not automatically possible to remove the balls, please enter the coordinates for the swap 1 -  y x   2 -  y x");
         }
     }
 

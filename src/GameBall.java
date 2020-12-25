@@ -16,6 +16,10 @@ public class GameBall {
         }
     }
 
+    public void scoreMonitor(Graphics g, int score){
+        g.drawString("Hello to JavaTutorial.net", 2, 2);
+    }
+
     public boolean isMouseUnderMe(int yMouse, int xMouse){
         return (xMouse-xCenter)*(xMouse-xCenter)+(yMouse-yCenter)*(yMouse-yCenter) <= radius*radius;
     }
